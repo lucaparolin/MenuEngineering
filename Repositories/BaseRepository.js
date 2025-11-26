@@ -148,15 +148,36 @@ class BaseRepository {
     }
 
     /**
-     * Converte un numero in formato italiano a float
-     * @param {string} valore - Es: "1.234,56"
+     * Converte un numero in formato italiano o internazionale a float
+     * Supporta:
+     * - Formato italiano: 1.234,56 (punto migliaia, virgola decimali)
+     * - Formato internazionale: 1234.56 (punto decimali)
+     * - Formato semplice italiano: 12,50 (virgola decimali)
+     * @param {string} valore
      * @returns {number}
      */
     parseaNumeroItaliano(valore) {
         if (!valore) return 0;
-        // Rimuovi i punti delle migliaia e sostituisci la virgola col punto
-        const pulito = valore.toString().replace(/\./g, '').replace(',', '.');
-        return parseFloat(pulito) || 0;
+
+        const str = valore.toString().trim();
+
+        // Se contiene sia punto che virgola
+        if (str.includes('.') && str.includes(',')) {
+            // Formato italiano: 1.234,56
+            // Rimuovi punti migliaia, sostituisci virgola con punto
+            const pulito = str.replace(/\./g, '').replace(',', '.');
+            return parseFloat(pulito) || 0;
+        }
+
+        // Se contiene solo virgola, è formato italiano semplice: 12,50
+        if (str.includes(',')) {
+            const pulito = str.replace(',', '.');
+            return parseFloat(pulito) || 0;
+        }
+
+        // Se contiene solo punto, è formato internazionale: 12.50
+        // Oppure nessun separatore decimale
+        return parseFloat(str) || 0;
     }
 
     /**

@@ -1,13 +1,13 @@
 Nome;Descrizione;Categoria;PrezzoVendita;Ingredienti;Quantita;TempoPreparazione
-Margherita DOC;Pizza con mozzarella di bufala e pomodoro San Marzano;Pizze;12,00;Farina 00,Pomodori San Marzano,Mozzarella di Bufala,Olio EVO,Basilico Fresco;0.25,0.15,0.15,0.02,0.01;15
-Spaghetti alla Carbonara;Il classico romano con guanciale e pecorino;Primi;14,00;Spaghetti,Guanciale,Pecorino Romano,Uova Fresche;0.12,0.08,0.05,0.1;20
-Tiramisù;Dolce al mascarpone e caffè;Dolci;8,00;Mascarpone,Savoiardi,Caffe Espresso,Cacao Amaro,Uova Fresche;0.1,0.06,0.02,0.01,0.08;30
-Branzino al Forno;Branzino con patate e olive;Secondi;22,00;Branzino,Olio EVO,Aglio;0.35,0.03,0.01;35
-Tagliatelle ai Porcini;Pasta fresca con funghi porcini;Primi;18,00;Farina 00,Uova Fresche,Funghi Porcini,Parmigiano Reggiano,Burro;0.1,0.08,0.12,0.03,0.02;25
-Prosciutto e Bufala;Antipasto con prosciutto crudo e mozzarella;Antipasti;16,00;Prosciutto Crudo DOP,Mozzarella di Bufala;0.08,0.12;5
-Gamberi alla Griglia;Gamberi freschi alla griglia;Secondi;24,00;Gamberi,Olio EVO,Aglio,Peperoncino;0.25,0.02,0.01,0.002;20
-Spaghetti Aglio Olio;Semplicità e tradizione;Primi;10,00;Spaghetti,Olio EVO,Aglio,Peperoncino;0.12,0.04,0.02,0.003;15
-Risotto ai Funghi;Risotto cremoso con porcini;Primi;16,00;Funghi Porcini,Burro,Parmigiano Reggiano,Cipolla;0.08,0.03,0.04,0.02;25
-Cotoletta alla Milanese;Cotoletta di vitello impanata;Secondi;20,00;Vitello,Uova Fresche,Farina 00,Burro;0.2,0.06,0.05,0.03;20
-Caprese;Pomodoro e mozzarella di bufala;Antipasti;12,00;Pomodori San Marzano,Mozzarella di Bufala,Basilico Fresco,Olio EVO;0.15,0.12,0.01,0.02;5
-Panna Cotta;Dolce al cucchiaio con frutti di bosco;Dolci;7,00;Mascarpone,Uova Fresche;0.08,0.04;15
+Margherita DOC;Pizza con mozzarella di bufala e pomodoro San Marzano;Pizze;12,00;Farina 00,Pomodori San Marzano,Mozzarella di Bufala,Olio EVO,Basilico Fresco;0.250,0.150,0.150,0.020,0.010;15
+Spaghetti alla Carbonara;Il classico romano con guanciale e pecorino;Primi;14,00;Spaghetti,Guanciale,Pecorino Romano,Uova Fresche;0.120,0.080,0.050,0.100;20
+Tiramisù;Dolce al mascarpone e caffè;Dolci;8,00;Mascarpone,Savoiardi,Caffe Espresso,Cacao Amaro,Uova Fresche;0.100,0.060,0.020,0.010,0.080;30
+Branzino al Forno;Branzino con patate e olive;Secondi;22,00;Branzino,Olio EVO,Aglio;0.350,0.030,0.010;35
+Tagliatelle ai Porcini;Pasta fresca con funghi porcini;Primi;18,00;Farina 00,Uova Fresche,Funghi Porcini,Parmigiano Reggiano 24m,Burro;0.100,0.080,0.120,0.030,0.020;25
+Prosciutto e Bufala;Antipasto con prosciutto crudo e mozzarella;Antipasti;16,00;Prosciutto Crudo DOP,Mozzarella di Bufala;0.080,0.120;5
+Gamberi alla Griglia;Gamberi freschi alla griglia;Secondi;24,00;Gamberi,Olio EVO,Aglio,Peperoncino;0.250,0.020,0.010,0.002;20
+Spaghetti Aglio Olio;Semplicità e tradizione;Primi;10,00;Spaghetti,Olio EVO,Aglio,Peperoncino;0.120,0.040,0.020,0.003;15
+Risotto ai Funghi;Risotto cremoso con porcini;Primi;16,00;Funghi Porcini,Burro,Parmigiano Reggiano 24m,Cipolla;0.080,0.030,0.040,0.020;25
+Cotoletta alla Milanese;Cotoletta di vitello impanata;Secondi;20,00;Vitello,Uova Fresche,Farina 00,Burro;0.200,0.060,0.050,0.030;20
+Caprese;Pomodoro e mozzarella di bufala;Antipasti;12,00;Pomodori San Marzano,Mozzarella di Bufala,Basilico Fresco,Olio EVO;0.150,0.120,0.010,0.020;5
+Panna Cotta;Dolce al cucchiaio con frutti di bosco;Dolci;7,00;Mascarpone,Uova Fresche;0.080,0.040;15
