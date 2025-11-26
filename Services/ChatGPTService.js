@@ -121,25 +121,66 @@ Rispondi SOLO con un JSON valido in questo formato esatto:
             throw new Error('API Key OpenAI non configurata');
         }
 
-        const prompt = `Sei un esperto chef e critico gastronomico. Analizza questa foto di un piatto e fornisci un giudizio sull'impiattamento.
+        const systemPrompt = `Sei un agente AI specializzato nell'analisi visiva, gastronomica ed estetica dei piatti destinati al servizio in ristoranti di alta cucina.
+Il tuo obiettivo è valutare se un piatto di portata rispetta gli standard di eccellenza richiesti prima che venga servito al cliente.
+
+Durante l'analisi devi:
+
+1. **Valutazione estetica e impiattamento**
+   * Armonia visiva, geometrie, ordine generale
+   * Coerenza del design con lo stile del ristorante e del piatto
+   * Equilibrio dei colori, contrasti e attrattività
+
+2. **Valutazione tecnica**
+   * Porzione corretta e bilanciata
+   * Pulizia dei bordi e assenza di sbavature o imperfezioni (gocce di salsa, ingredienti fuori posto)
+   * Coerenza delle texture osservabili
+
+3. **Valutazione del messaggio culinario**
+   * Riconoscibilità principale dell'ingrediente protagonista
+   * Alimenti disposti in modo da suggerire il concept del piatto
+
+4. **Sicurezza e integrità**
+   * Assenza di elementi estranei (corpi estranei, utensili, residui non commestibili)
+   * Ingredienti integri e freschi alla vista
+
+Mantieni un linguaggio professionale, oggettivo e orientato al miglioramento della qualità.
+Non fare supposizioni su ingredienti o tecniche non visivamente verificabili.`;
+
+        const userPrompt = `Analizza questa foto di un piatto e fornisci una valutazione professionale completa.
 
 Rispondi SOLO con un JSON valido in questo formato esatto:
 {
-  "commento": "Un commento dettagliato sull'impiattamento (3-4 frasi), includendo punti di forza e suggerimenti di miglioramento",
+  "commento": "Valutazione dettagliata del piatto (4-6 frasi) che copra estetica, tecnica e messaggio culinario",
   "punteggio": 8,
+  "livello_servizio": "perfetto|da_ritoccare|non_pronto",
+  "conclusione": "Frase conclusiva sul livello di servizio (es: 'Perfetto per il servizio', 'Da ritoccare prima del servizio', 'Non pronto per il servizio')",
   "colori_dominanti": ["#colore1", "#colore2", "#colore3"],
-  "colore_primario": "#colorePrimario",
-  "colore_secondario": "#coloreSecondario",
-  "colore_accento": "#coloreAccento",
-  "aspetti_positivi": ["aspetto1", "aspetto2"],
-  "suggerimenti": ["suggerimento1", "suggerimento2"]
+  "valutazione_estetica": {
+    "armonia_visiva": 8,
+    "equilibrio_colori": 7,
+    "ordine_generale": 9
+  },
+  "valutazione_tecnica": {
+    "porzione": 8,
+    "pulizia_bordi": 7,
+    "texture": 8
+  },
+  "aspetti_positivi": ["punto di forza 1", "punto di forza 2", "punto di forza 3"],
+  "criticita": ["criticità 1 con suggerimento pratico", "criticità 2 con suggerimento pratico"],
+  "suggerimenti_miglioramento": ["suggerimento pratico 1", "suggerimento pratico 2"]
 }
+
+IMPORTANTE per livello_servizio:
+- "perfetto" = punteggio 8-10, pronto per essere servito
+- "da_ritoccare" = punteggio 5-7, necessita piccoli aggiustamenti
+- "non_pronto" = punteggio 1-4, richiede interventi significativi
 
 Assicurati che:
 - I colori siano codici esadecimali validi estratti dal piatto
-- Il punteggio sia da 1 a 10
-- Il commento sia in italiano
-- I colori riflettano la palette cromatica del piatto`;
+- Il punteggio sia da 1 a 10 e coerente con il livello_servizio
+- Tutto il testo sia in italiano
+- Le valutazioni numeriche siano da 1 a 10`;
 
         try {
             const response = await fetch(`${this.baseUrl}/chat/completions`, {
@@ -152,9 +193,13 @@ Assicurati che:
                     model: this.modelVision,
                     messages: [
                         {
+                            role: 'system',
+                            content: systemPrompt
+                        },
+                        {
                             role: 'user',
                             content: [
-                                { type: 'text', text: prompt },
+                                { type: 'text', text: userPrompt },
                                 {
                                     type: 'image_url',
                                     image_url: {
@@ -166,7 +211,8 @@ Assicurati che:
                             ]
                         }
                     ],
-                    max_tokens: 1000
+                    max_tokens: 1500,
+                    temperature: 0.7
                 })
             });
 

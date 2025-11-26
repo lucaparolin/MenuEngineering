@@ -660,23 +660,82 @@ async function analizzaFoto() {
         const risultato = await chatGPTService.analizzaImpiattamento(img.src);
         coloriAnalisi = risultato;
 
+        // Determina colore in base al livello di servizio
+        const coloreGiudizio = getColoreGiudizio(risultato.livello_servizio, risultato.punteggio);
+
+        // Applica automaticamente i colori all'interfaccia
+        applicaColoriGiudizio(coloreGiudizio);
+
+        // Mostra punteggio con colore
         document.getElementById('analisi-punteggio').innerHTML = `
-            <p><strong>Punteggio:</strong> ${risultato.punteggio}/10</p>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                <div style="background: ${coloreGiudizio.primario}; color: white; padding: 1rem 2rem; border-radius: 12px; text-align: center;">
+                    <div style="font-size: 2.5rem; font-weight: bold;">${risultato.punteggio}/10</div>
+                    <div style="font-size: 0.9rem;">${coloreGiudizio.etichetta}</div>
+                </div>
+                <div style="flex: 1;">
+                    <p style="font-size: 1.2rem; font-weight: 600; color: ${coloreGiudizio.primario};">${risultato.conclusione || coloreGiudizio.messaggio}</p>
+                </div>
+            </div>
         `;
 
+        // Mostra valutazioni dettagliate se presenti
+        let valutazioniHTML = '';
+        if (risultato.valutazione_estetica) {
+            valutazioniHTML += `
+                <div style="margin-top: 1rem;">
+                    <h5>Valutazione Estetica</h5>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        ${creaBarraValutazione('Armonia Visiva', risultato.valutazione_estetica.armonia_visiva)}
+                        ${creaBarraValutazione('Equilibrio Colori', risultato.valutazione_estetica.equilibrio_colori)}
+                        ${creaBarraValutazione('Ordine Generale', risultato.valutazione_estetica.ordine_generale)}
+                    </div>
+                </div>
+            `;
+        }
+        if (risultato.valutazione_tecnica) {
+            valutazioniHTML += `
+                <div style="margin-top: 1rem;">
+                    <h5>Valutazione Tecnica</h5>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        ${creaBarraValutazione('Porzione', risultato.valutazione_tecnica.porzione)}
+                        ${creaBarraValutazione('Pulizia Bordi', risultato.valutazione_tecnica.pulizia_bordi)}
+                        ${creaBarraValutazione('Texture', risultato.valutazione_tecnica.texture)}
+                    </div>
+                </div>
+            `;
+        }
+
         document.getElementById('analisi-commento').innerHTML = `
-            <p><strong>Valutazione:</strong> ${risultato.commento}</p>
+            <p><strong>Valutazione Professionale:</strong></p>
+            <p style="font-style: italic; background: #f9f9f9; padding: 1rem; border-radius: 8px; border-left: 4px solid ${coloreGiudizio.primario};">${risultato.commento}</p>
+            ${valutazioniHTML}
         `;
 
         document.getElementById('color-palette').innerHTML = risultato.colori_dominanti.map(c => `
             <div class="color-swatch" style="background: ${c};" title="${c}"></div>
         `).join('');
 
-        document.getElementById('analisi-positivi').innerHTML = risultato.aspetti_positivi ?
-            `<h5 style="margin-top: 1rem;">Aspetti Positivi</h5><ul>${risultato.aspetti_positivi.map(a => `<li>${a}</li>`).join('')}</ul>` : '';
+        // Aspetti positivi
+        document.getElementById('analisi-positivi').innerHTML = risultato.aspetti_positivi && risultato.aspetti_positivi.length > 0 ?
+            `<h5 style="margin-top: 1rem; color: #27AE60;">Punti di Forza</h5>
+            <ul style="list-style: none; padding: 0;">${risultato.aspetti_positivi.map(a => `<li style="padding: 0.5rem; background: #E8F8F0; margin-bottom: 0.5rem; border-radius: 6px;">✓ ${a}</li>`).join('')}</ul>` : '';
 
-        document.getElementById('analisi-suggerimenti').innerHTML = risultato.suggerimenti ?
-            `<h5 style="margin-top: 1rem;">Suggerimenti</h5><ul>${risultato.suggerimenti.map(s => `<li>${s}</li>`).join('')}</ul>` : '';
+        // Criticità
+        const criticita = risultato.criticita || [];
+        const suggerimenti = risultato.suggerimenti_miglioramento || risultato.suggerimenti || [];
+
+        let criticitaHTML = '';
+        if (criticita.length > 0) {
+            criticitaHTML += `<h5 style="margin-top: 1rem; color: #E74C3C;">Criticità</h5>
+            <ul style="list-style: none; padding: 0;">${criticita.map(c => `<li style="padding: 0.5rem; background: #FDEDEC; margin-bottom: 0.5rem; border-radius: 6px;">⚠ ${c}</li>`).join('')}</ul>`;
+        }
+        if (suggerimenti.length > 0) {
+            criticitaHTML += `<h5 style="margin-top: 1rem; color: #F39C12;">Suggerimenti di Miglioramento</h5>
+            <ul style="list-style: none; padding: 0;">${suggerimenti.map(s => `<li style="padding: 0.5rem; background: #FEF9E7; margin-bottom: 0.5rem; border-radius: 6px;">💡 ${s}</li>`).join('')}</ul>`;
+        }
+
+        document.getElementById('analisi-suggerimenti').innerHTML = criticitaHTML;
 
         document.getElementById('risultato-analisi').style.display = 'block';
 
@@ -688,13 +747,103 @@ async function analizzaFoto() {
     }
 }
 
+/**
+ * Crea una barra di valutazione visiva
+ */
+function creaBarraValutazione(label, valore) {
+    const percentuale = (valore / 10) * 100;
+    const colore = valore >= 8 ? '#27AE60' : valore >= 5 ? '#F1C40F' : '#E74C3C';
+    return `
+        <div style="flex: 1; min-width: 150px;">
+            <div style="font-size: 0.85rem; margin-bottom: 0.25rem;">${label}: <strong>${valore}/10</strong></div>
+            <div style="background: #eee; border-radius: 4px; height: 8px; overflow: hidden;">
+                <div style="background: ${colore}; height: 100%; width: ${percentuale}%; transition: width 0.5s;"></div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Determina i colori in base al livello di servizio
+ */
+function getColoreGiudizio(livelloServizio, punteggio) {
+    // Colori netti come richiesto
+    const colori = {
+        perfetto: {
+            primario: '#27AE60',      // Verde netto
+            secondario: '#D5F5E3',    // Verde chiaro
+            accento: '#1E8449',       // Verde scuro
+            sfondo: '#EAFAF1',        // Verde molto chiaro
+            etichetta: 'PERFETTO',
+            messaggio: 'Perfetto per il servizio'
+        },
+        da_ritoccare: {
+            primario: '#F1C40F',      // Giallo netto
+            secondario: '#FCF3CF',    // Giallo chiaro
+            accento: '#D4AC0D',       // Giallo scuro
+            sfondo: '#FEF9E7',        // Giallo molto chiaro
+            etichetta: 'DA RITOCCARE',
+            messaggio: 'Da ritoccare prima del servizio'
+        },
+        non_pronto: {
+            primario: '#E74C3C',      // Rosso netto
+            secondario: '#FADBD8',    // Rosso chiaro
+            accento: '#C0392B',       // Rosso scuro
+            sfondo: '#FDEDEC',        // Rosso molto chiaro
+            etichetta: 'NON PRONTO',
+            messaggio: 'Non pronto per il servizio'
+        }
+    };
+
+    // Determina in base al livello o al punteggio
+    if (livelloServizio) {
+        return colori[livelloServizio] || colori.da_ritoccare;
+    }
+
+    // Fallback basato sul punteggio
+    if (punteggio >= 8) return colori.perfetto;
+    if (punteggio >= 5) return colori.da_ritoccare;
+    return colori.non_pronto;
+}
+
+/**
+ * Applica i colori del giudizio all'interfaccia
+ */
+function applicaColoriGiudizio(coloreGiudizio) {
+    const root = document.documentElement;
+    root.style.setProperty('--color-primario', coloreGiudizio.primario);
+    root.style.setProperty('--color-secondario', coloreGiudizio.secondario);
+    root.style.setProperty('--color-accento', coloreGiudizio.accento);
+    root.style.setProperty('--color-sfondo', coloreGiudizio.sfondo);
+
+    // Aggiorna anche l'header per effetto visivo immediato
+    const header = document.querySelector('.header');
+    if (header) {
+        header.style.background = `linear-gradient(135deg, ${coloreGiudizio.secondario}, ${coloreGiudizio.primario})`;
+    }
+
+    // Salva in localStorage
+    localStorage.setItem('menuOptimizer_coloriUI', JSON.stringify({
+        primario: coloreGiudizio.primario,
+        secondario: coloreGiudizio.secondario,
+        accento: coloreGiudizio.accento,
+        sfondo: coloreGiudizio.sfondo
+    }));
+}
+
 function applicaColoriEstratti() {
     if (!coloriAnalisi) return;
 
     const root = document.documentElement;
-    root.style.setProperty('--color-primario', coloriAnalisi.colore_primario || coloriAnalisi.colori_dominanti[0]);
-    root.style.setProperty('--color-secondario', coloriAnalisi.colore_secondario || schiarisciColore(coloriAnalisi.colori_dominanti[0], 0.7));
-    root.style.setProperty('--color-accento', coloriAnalisi.colore_accento || coloriAnalisi.colori_dominanti[1] || coloriAnalisi.colori_dominanti[0]);
+    root.style.setProperty('--color-primario', coloriAnalisi.colori_dominanti[0] || '#E8D5B7');
+    root.style.setProperty('--color-secondario', schiarisciColore(coloriAnalisi.colori_dominanti[0] || '#E8D5B7', 0.7));
+    root.style.setProperty('--color-accento', coloriAnalisi.colori_dominanti[1] || coloriAnalisi.colori_dominanti[0] || '#C4A574');
+
+    // Ripristina header
+    const header = document.querySelector('.header');
+    if (header) {
+        header.style.background = '';
+    }
 
     // Salva in localStorage
     localStorage.setItem('menuOptimizer_coloriUI', JSON.stringify({
@@ -703,7 +852,7 @@ function applicaColoriEstratti() {
         accento: root.style.getPropertyValue('--color-accento')
     }));
 
-    mostraAlert('success', 'Colori applicati all\'interfaccia!');
+    mostraAlert('success', 'Colori del piatto applicati all\'interfaccia!');
 }
 
 function schiarisciColore(colore, fattore) {
