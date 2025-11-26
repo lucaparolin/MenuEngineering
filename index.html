@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Optimizer - Menu Engineering Dinamico</title>
+    <style>
+        :root {
+            --color-primario: #E8D5B7;
+            --color-secondario: #F5E6CC;
+            --color-accento: #C4A574;
+            --color-sfondo: #FDF8F0;
+            --color-testo: #3D3D3D;
+            --color-success: #7CB69D;
+            --color-warning: #E8B86D;
+            --color-danger: #D98880;
+            --color-info: #85C1E2;
+            --shadow: 0 2px 8px rgba(0,0,0,0.08);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-sfondo);
+            color: var(--color-testo);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--color-primario), var(--color-accento));
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-testo);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            background: var(--color-secondario);
+            padding: 0 2rem;
+            border-bottom: 1px solid var(--color-accento);
+        }
+
+        .nav-tabs ul {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            list-style: none;
+            gap: 0;
+        }
+
+        .nav-tabs li {
+            position: relative;
+        }
+
+        .nav-tabs a {
+            display: block;
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            color: var(--color-testo);
+            font-weight: 500;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-tabs a:hover,
+        .nav-tabs a.active {
+            background: var(--color-sfondo);
+            border-bottom-color: var(--color-accento);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-secondario);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border-left: 4px solid var(--color-accento);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-accento);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--color-accento);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #B8965F;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondario);
+            color: var(--color-testo);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-primario);
+        }
+
+        .btn-success {
+            background: var(--color-success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--color-danger);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--color-testo);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--color-secondario);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-accento);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--color-secondario);
+        }
+
+        th {
+            background: var(--color-secondario);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: var(--color-sfondo);
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed var(--color-accento);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--color-sfondo);
+        }
+
+        .file-upload:hover {
+            border-color: var(--color-primario);
+            background: white;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* BCG Matrix */
+        .bcg-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .bcg-quadrant {
+            padding: 1rem;
+            border-radius: var(--radius);
+            min-height: 150px;
+        }
+
+        .bcg-star { background: linear-gradient(135deg, #FFE57F, #FFD54F); }
+        .bcg-puzzle { background: linear-gradient(135deg, #81D4FA, #4FC3F7); }
+        .bcg-horse { background: linear-gradient(135deg, #A5D6A7, #81C784); }
+        .bcg-dog { background: linear-gradient(135deg, #FFAB91, #FF8A65); }
+
+        .bcg-quadrant h4 {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bcg-items {
+            font-size: 0.9rem;
+        }
+
+        /* Ingredient selector */
+        .ingredient-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .ingredient-tag {
+            background: var(--color-primario);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .ingredient-tag .remove {
+            cursor: pointer;
+            color: var(--color-danger);
+            font-weight: bold;
+        }
+
+        /* Photo analysis */
+        .photo-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+        }
+
+        .analysis-result {
+            background: var(--color-sfondo);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            margin-top: 1rem;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .color-swatch {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Slider */
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--color-secondario);
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--color-accento);
+            cursor: pointer;
+        }
+
+        .slider-value {
+            min-width: 60px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-success { background: #D5F5E3; color: #1E8449; }
+        .alert-warning { background: #FCF3CF; color: #9A7D0A; }
+        .alert-danger { background: #FADBD8; color: #922B21; }
+        .alert-info { background: #D4E6F1; color: #1A5276; }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--color-secondario);
+            border-radius: 50%;
+            border-top-color: var(--color-accento);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-tabs ul {
+                flex-wrap: wrap;
+            }
+
+            .nav-tabs a {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .bcg-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Accessibility */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        *:focus {
+            outline: 2px solid var(--color-accento);
+            outline-offset: 2px;
+        }
+
+        /* Suggerimenti */
+        .suggestion-card {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--color-sfondo);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            align-items: flex-start;
+        }
+
+        .suggestion-icon {
+            font-size: 1.5rem;
+        }
+
+        .suggestion-content {
+            flex: 1;
+        }
+
+        .priority-alta { border-left: 4px solid var(--color-danger); }
+        .priority-media { border-left: 4px solid var(--color-warning); }
+        .priority-bassa { border-left: 4px solid var(--color-info); }
+        .priority-info { border-left: 4px solid var(--color-success); }
+
+        /* Simulazione */
+        .simulation-result {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .simulation-before, .simulation-after {
+            padding: 1.5rem;
+            border-radius: var(--radius);
+        }
+
+        .simulation-before {
+            background: var(--color-secondario);
+        }
+
+        .simulation-after {
+            background: var(--color-primario);
+        }
+
+        .simulation-diff {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .diff-positive { background: #D5F5E3; color: #1E8449; }
+        .diff-negative { background: #FADBD8; color: #922B21; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="logo-icon">🍽️</span>
+                <h1>Menu Optimizer</h1>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="mostraImpostazioni()">
+                    ⚙️ Impostazioni
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-tabs" role="navigation" aria-label="Navigazione principale">
+        <ul>
+            <li><a href="#" class="active" data-section="dashboard">📊 Dashboard</a></li>
+            <li><a href="#" data-section="ingredienti">🥬 Ingredienti</a></li>
+            <li><a href="#" data-section="menu">📋 Menu</a></li>
+            <li><a href="#" data-section="nuovo-piatto">➕ Nuovo Piatto</a></li>
+            <li><a href="#" data-section="simulazione">🔮 Simulazione</a></li>
+            <li><a href="#" data-section="analisi-foto">📸 Analisi Foto</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="section active">
+            <h2 class="visually-hidden">Dashboard</h2>
+
+            <!-- Stats -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-piatti">0</div>
+                    <div class="stat-label">Piatti nel Menu</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-ingredienti">0</div>
+                    <div class="stat-label">Ingredienti</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-margine">€ 0</div>
+                    <div class="stat-label">Margine Medio</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-foodcost">0%</div>
+                    <div class="stat-label">Food Cost Medio</div>
+                </div>
+            </div>
+
+            <!-- BCG Matrix -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📈 Matrice BCG - Classificazione Piatti</h3>
+                </div>
+                <div class="bcg-grid" id="bcg-matrix">
+                    <div class="bcg-quadrant bcg-star">
+                        <h4>⭐ Star</h4>
+                        <p>Alta popolarità, alto margine</p>
+                        <div class="bcg-items" id="bcg-star"></div>
+                    </div>
+                    <div class="bcg-quadrant bcg-puzzle">
+                        <h4>🧩 Puzzle</h4>
+                        <p>Bassa popolarità, alto margine</p>
+                        <div class="bcg-items" id="bcg-puzzle"></div>
+                    </div>
+                    <div class="bcg-quadrant bcg-horse">
+                        <h4>🐴 Cavallo da Traino</h4>
+                        <p>Alta popolarità, basso margine</p>
+                        <div class="bcg-items" id="bcg-horse"></div>
+                    </div>
+                    <div class="bcg-quadrant bcg-dog">
+                        <h4>🐕 Cane</h4>
+                        <p>Bassa popolarità, basso margine</p>
+                        <div class="bcg-items" id="bcg-dog"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suggerimenti -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">💡 Suggerimenti</h3>
+                </div>
+                <div id="suggerimenti-container"></div>
+            </div>
+        </section>
+
+        <!-- Ingredienti Section -->
+        <section id="ingredienti" class="section">
+            <h2 class="visually-hidden">Gestione Ingredienti</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📤 Carica Ingredienti da CSV</h3>
+                </div>
+                <div class="file-upload" id="csv-upload-ingredienti">
+                    <div class="file-upload-icon">📄</div>
+                    <p>Trascina il file CSV qui o clicca per selezionare</p>
+                    <p><small>Formato: Nome;CostoPerUnita;UnitaMisura;Categoria;Fornitore</small></p>
+                    <input type="file" id="file-ingredienti" accept=".csv" aria-label="Seleziona file CSV ingredienti">
+                </div>
+                <div id="csv-preview-ingredienti" style="margin-top: 1rem;"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🥬 Lista Ingredienti</h3>
+                    <button class="btn btn-primary btn-sm" onclick="mostraFormIngrediente()">+ Aggiungi</button>
+                </div>
+                <div class="table-container">
+                    <table id="tabella-ingredienti">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Costo/Unità</th>
+                                <th>Unità</th>
+                                <th>Categoria</th>
+                                <th>Fornitore</th>
+                                <th>Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section -->
+        <section id="menu" class="section">
+            <h2 class="visually-hidden">Gestione Menu</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📤 Carica Menu da CSV</h3>
+                </div>
+                <div class="file-upload" id="csv-upload-menu">
+                    <div class="file-upload-icon">📄</div>
+                    <p>Trascina il file CSV qui o clicca per selezionare</p>
+                    <p><small>Formato: Nome;Descrizione;Categoria;PrezzoVendita;Ingredienti;Quantita</small></p>
+                    <input type="file" id="file-menu" accept=".csv" aria-label="Seleziona file CSV menu">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📋 Piatti nel Menu</h3>
+                </div>
+
+                <!-- Costi Fissi Slider -->
+                <div class="form-group">
+                    <label class="form-label">Percentuale Costi Fissi: <span id="costi-fissi-value">30%</span></label>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="costi-fissi-slider" min="0" max="100" value="30">
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="tabella-menu">
+                        <thead>
+                            <tr>
+                                <th>Piatto</th>
+                                <th>Categoria</th>
+                                <th>Costo</th>
+                                <th>Prezzo</th>
+                                <th>Margine</th>
+                                <th>Food Cost %</th>
+                                <th>Vendite/Sett.</th>
+                                <th>Classif.</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nuovo Piatto Section -->
+        <section id="nuovo-piatto" class="section">
+            <h2 class="visually-hidden">Crea Nuovo Piatto</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">➕ Crea Piatto Fuori Menu</h3>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="nuovo-piatto-nome">Nome Piatto</label>
+                        <input type="text" class="form-control" id="nuovo-piatto-nome" placeholder="Inserisci nome...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="nuovo-piatto-categoria">Categoria</label>
+                        <select class="form-control" id="nuovo-piatto-categoria">
+                            <option value="Antipasti">Antipasti</option>
+                            <option value="Primi">Primi</option>
+                            <option value="Secondi">Secondi</option>
+                            <option value="Contorni">Contorni</option>
+                            <option value="Dolci">Dolci</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Seleziona Ingredienti</label>
+                    <div class="form-row">
+                        <select class="form-control" id="select-ingrediente">
+                            <option value="">-- Seleziona ingrediente --</option>
+                        </select>
+                        <input type="number" class="form-control" id="quantita-ingrediente" placeholder="Quantità (kg/l)" step="0.001" min="0">
+                        <button class="btn btn-secondary" onclick="aggiungiIngredienteAPiatto()">Aggiungi</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Ingredienti Selezionati</label>
+                    <div class="ingredient-selector" id="ingredienti-selezionati"></div>
+                </div>
+
+                <!-- Calcolo Costo in Tempo Reale -->
+                <div class="card" style="background: var(--color-secondario);">
+                    <h4>💰 Calcolo Costo in Tempo Reale</h4>
+                    <div class="stats-grid" style="margin-top: 1rem;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="costo-base-nuovo">€ 0,00</div>
+                            <div class="stat-label">Costo Base</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="costi-fissi-nuovo">€ 0,00</div>
+                            <div class="stat-label">Costi Fissi</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="costo-totale-nuovo">€ 0,00</div>
+                            <div class="stat-label">Costo Totale</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="prezzo-suggerito-nuovo">€ 0,00</div>
+                            <div class="stat-label">Prezzo Suggerito</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggerimento Nomi ChatGPT -->
+                <div class="form-group" style="margin-top: 1rem;">
+                    <button class="btn btn-primary" onclick="suggerisciNomiPiatto()" id="btn-suggerisci-nomi">
+                        🤖 Suggerisci Nomi con AI
+                    </button>
+                    <div id="nomi-suggeriti" style="margin-top: 1rem;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="prezzo-vendita-nuovo">Prezzo di Vendita (€)</label>
+                    <input type="number" class="form-control" id="prezzo-vendita-nuovo" step="0.50" min="0">
+                </div>
+
+                <button class="btn btn-success" onclick="salvaNuovoPiatto()">💾 Salva Piatto</button>
+            </div>
+        </section>
+
+        <!-- Simulazione Section -->
+        <section id="simulazione" class="section">
+            <h2 class="visually-hidden">Simulazione Scenari</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">🔮 Simulazione "E Se..."</h3>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Tipo di Simulazione</label>
+                    <select class="form-control" id="tipo-simulazione" onchange="cambiaModalitaSimulazione()">
+                        <option value="prezzo-piatto">Variazione Prezzo Singolo Piatto</option>
+                        <option value="costo-ingrediente">Variazione Costo Ingrediente</option>
+                        <option value="aumento-generale">Aumento Generale Prezzi</option>
+                    </select>
+                </div>
+
+                <!-- Simulazione Prezzo Piatto -->
+                <div id="sim-prezzo-piatto">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Seleziona Piatto</label>
+                            <select class="form-control" id="sim-select-piatto"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nuovo Prezzo (€)</label>
+                            <input type="number" class="form-control" id="sim-nuovo-prezzo" step="0.50">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="eseguiSimulazionePrezzo()">▶️ Simula</button>
+                </div>
+
+                <!-- Simulazione Costo Ingrediente -->
+                <div id="sim-costo-ingrediente" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Seleziona Ingrediente</label>
+                            <select class="form-control" id="sim-select-ingrediente"></select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nuovo Costo (€/unità)</label>
+                            <input type="number" class="form-control" id="sim-nuovo-costo" step="0.01">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="eseguiSimulazioneCosto()">▶️ Simula</button>
+                </div>
+
+                <!-- Simulazione Aumento Generale -->
+                <div id="sim-aumento-generale" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Percentuale Aumento: <span id="sim-perc-value">10%</span></label>
+                        <div class="slider-container">
+                            <span>-20%</span>
+                            <input type="range" class="slider" id="sim-percentuale" min="-20" max="30" value="10">
+                            <span>+30%</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="eseguiSimulazioneGenerale()">▶️ Simula</button>
+                </div>
+
+                <!-- Risultati Simulazione -->
+                <div id="risultati-simulazione" style="margin-top: 2rem;"></div>
+            </div>
+        </section>
+
+        <!-- Analisi Foto Section -->
+        <section id="analisi-foto" class="section">
+            <h2 class="visually-hidden">Analisi Impiattamento</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">📸 Analisi Impiattamento con AI</h3>
+                </div>
+
+                <div class="file-upload" id="foto-upload">
+                    <div class="file-upload-icon">📷</div>
+                    <p>Trascina la foto del piatto qui o clicca per selezionare</p>
+                    <p><small>Formati supportati: JPG, PNG, WebP</small></p>
+                    <input type="file" id="file-foto" accept="image/*" aria-label="Seleziona foto piatto">
+                </div>
+
+                <img id="foto-preview" class="photo-preview" style="display: none;" alt="Anteprima foto piatto">
+
+                <button class="btn btn-primary" onclick="analizzaFoto()" id="btn-analizza-foto" style="margin-top: 1rem; display: none;">
+                    🤖 Analizza Impiattamento con AI
+                </button>
+
+                <div id="risultato-analisi" style="display: none;" class="analysis-result">
+                    <h4>📊 Risultato Analisi</h4>
+                    <div id="analisi-punteggio"></div>
+                    <div id="analisi-commento"></div>
+                    <h5 style="margin-top: 1rem;">🎨 Palette Colori Estratti</h5>
+                    <div class="color-palette" id="color-palette"></div>
+                    <div id="analisi-positivi"></div>
+                    <div id="analisi-suggerimenti"></div>
+                    <button class="btn btn-secondary" onclick="applicaColoriEstratti()" style="margin-top: 1rem;">
+                        🎨 Applica Colori alla UI
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Impostazioni -->
+    <div class="modal-overlay" id="modal-impostazioni">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>⚙️ Impostazioni</h3>
+                <button class="modal-close" onclick="chiudiModal()">&times;</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="api-key">API Key OpenAI</label>
+                <input type="password" class="form-control" id="api-key" placeholder="sk-...">
+                <small>Necessaria per suggerimenti nomi e analisi foto</small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Percentuale Costi Fissi Predefinita</label>
+                <div class="slider-container">
+                    <input type="range" class="slider" id="costi-fissi-default" min="0" max="100" value="30">
+                    <span class="slider-value" id="costi-fissi-default-value">30%</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Colori Interfaccia</label>
+                <button class="btn btn-secondary btn-sm" onclick="ripristinaColori()">🔄 Ripristina Predefiniti</button>
+            </div>
+
+            <div class="form-group" style="margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="salvaImpostazioni()">💾 Salva Impostazioni</button>
+            </div>
+
+            <hr style="margin: 2rem 0;">
+
+            <div class="form-group">
+                <label class="form-label">Gestione Dati</label>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button class="btn btn-secondary btn-sm" onclick="esportaDati()">📤 Esporta Tutto</button>
+                    <button class="btn btn-secondary btn-sm" onclick="importaDati()">📥 Importa</button>
+                    <button class="btn btn-danger btn-sm" onclick="resetDati()">🗑️ Reset Tutto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="Models/IngredienteEntity.js"></script>
+    <script src="Models/PiattoEntity.js"></script>
+    <script src="Models/MenuEntity.js"></script>
+    <script src="Models/VenditaEntity.js"></script>
+    <script src="DTOs/IngredienteFormDto.js"></script>
+    <script src="DTOs/PiattoFormDto.js"></script>
+    <script src="DTOs/PiattoListDto.js"></script>
+    <script src="DTOs/SimulazioneDto.js"></script>
+    <script src="Repositories/BaseRepository.js"></script>
+    <script src="Repositories/IngredienteRepository.js"></script>
+    <script src="Repositories/PiattoRepository.js"></script>
+    <script src="Repositories/VenditaRepository.js"></script>
+    <script src="Services/FoodCostService.js"></script>
+    <script src="Services/MenuEngineeringService.js"></script>
+    <script src="Services/SimulazioneService.js"></script>
+    <script src="Services/ChatGPTService.js"></script>
+    <script src="Assets/js/app.js"></script>
+</body>
+</html>

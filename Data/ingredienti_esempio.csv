@@ -1,0 +1,31 @@
+Nome;CostoPerUnita;UnitaMisura;Categoria;Fornitore
+Pomodori San Marzano;3,50;kg;Verdure;Ortofrutticola Sud
+Mozzarella di Bufala;12,00;kg;Latticini;Caseificio Campano
+Farina 00;0,80;kg;Farine;Molino Rosso
+Olio EVO;8,50;l;Condimenti;Oleificio Puglia
+Basilico Fresco;15,00;kg;Erbe;Ortofrutticola Sud
+Prosciutto Crudo DOP;28,00;kg;Salumi;Salumificio Parma
+Parmigiano Reggiano 24m;22,00;kg;Latticini;Caseificio Emilia
+Spaghetti;1,80;kg;Pasta;Pastificio Gragnano
+Guanciale;18,00;kg;Salumi;Norcineria Umbra
+Pecorino Romano;16,00;kg;Latticini;Caseificio Lazio
+Uova Fresche;4,50;kg;Uova;Fattoria Bio
+Burro;9,00;kg;Latticini;Latteria Alpina
+Aglio;6,00;kg;Verdure;Ortofrutticola Sud
+Peperoncino;25,00;kg;Spezie;Spezieria Calabra
+Branzino;24,00;kg;Pesce;Pescheria Adriatica
+Gamberi;32,00;kg;Pesce;Pescheria Adriatica
+Vitello;22,00;kg;Carni;Macelleria Chianina
+Funghi Porcini;45,00;kg;Verdure;Funghi Toscani
+Tartufo Nero;800,00;kg;Tartufi;Tartufi Umbria
+Mascarpone;8,00;kg;Latticini;Caseificio Lombardo
+Savoiardi;6,00;kg;Dolci;Biscottificio
+Cacao Amaro;12,00;kg;Dolci;Cioccolateria
+Caffe Espresso;18,00;kg;Bevande;Torrefazione Napoli
+Limoni Amalfi;4,00;kg;Frutta;Agrumeto Costiera
+Ricotta Fresca;7,00;kg;Latticini;Caseificio Campano
+Spinaci;3,00;kg;Verdure;Ortofrutticola Nord
+Salmone;26,00;kg;Pesce;Pescheria Nordica
+Zucchine;2,50;kg;Verdure;Ortofrutticola Sud
+Melanzane;2,00;kg;Verdure;Ortofrutticola Sud
+Cipolla;1,50;kg;Verdure;Ortofrutticola Nord
