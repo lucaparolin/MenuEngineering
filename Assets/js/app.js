@@ -900,3 +900,137 @@ Spaghetti Aglio Olio;Semplicità e tradizione;Primi;10,00;Spaghetti,Olio EVO,Agl
         piattoRepo.caricaDaCsv(csvMenu, ingredienteRepo);
     }
 }
+
+/**
+ * Gestione Form Ingrediente
+ */
+let ingredienteInModifica = null;
+
+function mostraFormIngrediente(id = null) {
+    ingredienteInModifica = id;
+
+    // Crea modal se non esiste
+    let modal = document.getElementById('modal-ingrediente');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'modal-ingrediente';
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 id="titolo-form-ingrediente">Nuovo Ingrediente</h3>
+                    <button class="modal-close" onclick="chiudiModalIngrediente()">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="ing-nome">Nome</label>
+                    <input type="text" class="form-control" id="ing-nome" placeholder="Nome ingrediente">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="ing-costo">Costo per Unità (€)</label>
+                        <input type="number" class="form-control" id="ing-costo" step="0.01" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="ing-unita">Unità di Misura</label>
+                        <select class="form-control" id="ing-unita">
+                            <option value="kg">kg (chilogrammo)</option>
+                            <option value="l">l (litro)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label" for="ing-categoria">Categoria</label>
+                        <input type="text" class="form-control" id="ing-categoria" placeholder="Es: Verdure, Latticini...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="ing-fornitore">Fornitore</label>
+                        <input type="text" class="form-control" id="ing-fornitore" placeholder="Nome fornitore">
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem;">
+                    <button class="btn btn-success" onclick="salvaIngrediente()">💾 Salva</button>
+                    <button class="btn btn-secondary" onclick="chiudiModalIngrediente()">Annulla</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    // Popola form se modifica
+    if (id) {
+        const ing = ingredienteRepo.getById(id);
+        if (ing) {
+            document.getElementById('titolo-form-ingrediente').textContent = 'Modifica Ingrediente';
+            document.getElementById('ing-nome').value = ing.nome;
+            document.getElementById('ing-costo').value = ing.costoPerUnita;
+            document.getElementById('ing-unita').value = ing.unitaMisura;
+            document.getElementById('ing-categoria').value = ing.categoria || '';
+            document.getElementById('ing-fornitore').value = ing.fornitore || '';
+        }
+    } else {
+        document.getElementById('titolo-form-ingrediente').textContent = 'Nuovo Ingrediente';
+        document.getElementById('ing-nome').value = '';
+        document.getElementById('ing-costo').value = '';
+        document.getElementById('ing-unita').value = 'kg';
+        document.getElementById('ing-categoria').value = '';
+        document.getElementById('ing-fornitore').value = '';
+    }
+
+    modal.classList.add('active');
+}
+
+function chiudiModalIngrediente() {
+    const modal = document.getElementById('modal-ingrediente');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+    ingredienteInModifica = null;
+}
+
+function salvaIngrediente() {
+    const nome = document.getElementById('ing-nome').value.trim();
+    const costo = parseFloat(document.getElementById('ing-costo').value);
+    const unita = document.getElementById('ing-unita').value;
+    const categoria = document.getElementById('ing-categoria').value.trim();
+    const fornitore = document.getElementById('ing-fornitore').value.trim();
+
+    if (!nome) {
+        mostraAlert('warning', 'Inserisci il nome dell\'ingrediente');
+        return;
+    }
+
+    if (!costo || costo <= 0) {
+        mostraAlert('warning', 'Inserisci un costo valido');
+        return;
+    }
+
+    if (ingredienteInModifica) {
+        // Modifica esistente
+        ingredienteRepo.aggiorna(ingredienteInModifica, {
+            nome,
+            costoPerUnita: costo,
+            unitaMisura: unita,
+            categoria: categoria || 'Altro',
+            fornitore,
+            dataAggiornamento: new Date()
+        });
+        mostraAlert('success', 'Ingrediente aggiornato!');
+    } else {
+        // Nuovo ingrediente
+        const nuovoIng = new IngredienteEntity(null, nome, costo, unita, categoria || 'Altro', fornitore, new Date());
+        ingredienteRepo.aggiungi(nuovoIng);
+        mostraAlert('success', 'Ingrediente aggiunto!');
+    }
+
+    chiudiModalIngrediente();
+    aggiornaTabellaingredienti();
+    aggiornaDashboard();
+
+    // Aggiorna costi nei piatti
+    piattoRepo.aggiornaCosingIngredienti(ingredienteRepo);
+}
+
+function modificaIngrediente(id) {
+    mostraFormIngrediente(id);
+}
